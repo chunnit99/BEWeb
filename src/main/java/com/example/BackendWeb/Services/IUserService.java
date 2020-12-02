@@ -12,7 +12,7 @@ public interface IUserService {
 
     void updateUser(User user);
 
-    void deleteUser(int id);
+    void deleteUser(Integer id);
 
-    Optional<User> findUserById(int id);
+    Optional<User> findUserById(Integer id);
 }
