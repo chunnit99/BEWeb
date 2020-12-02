@@ -18,7 +18,7 @@ public class TestImple implements IUserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(User user, int id) {
 
     }
 

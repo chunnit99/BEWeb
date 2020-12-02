@@ -47,21 +47,24 @@ public class HelperController {
 
     @PutMapping (value = "/api/helpers/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Helper>> updateHelper(@PathVariable("id") Integer id,
+    public ResponseEntity<Helper> updateHelper(@PathVariable("id") Integer id,
                                                  @RequestBody Helper helper){
-        Optional<Helper> currentHelper = helperService.findHelperById(helper.getId());
+        Optional<Helper> currentHelper = helperService.findHelperById(id);
+        if (!currentHelper.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         helperService.updateHelper(helper,id);
-
-        List<Helper> helpers = helperService.getAllHelper();
-        return new ResponseEntity<>(helpers,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/api/helpers/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Helper>> deleteUser(@PathVariable("id") Integer id){
+    public ResponseEntity<Helper> deleteUser(@PathVariable("id") Integer id){
         Optional<Helper> helper = helperService.findHelperById(id);
+        if (!helper.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         helperService.deleteHelper(id);
-        List<Helper> helpers = helperService.getAllHelper();
-        return new ResponseEntity<>(helpers, HttpStatus.OK);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 }

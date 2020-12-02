@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/api/users")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<User> createUser(@RequestBody User user){
         userService.createUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -43,19 +43,23 @@ public class UserController {
 
     @PutMapping (value = "/api/users/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<User>> updateUser(@PathVariable("id") Integer id,
+    public ResponseEntity<User> updateUser(@PathVariable("id") Integer id,
                                                  @RequestBody User user){
         Optional<User> currentUser = userService.findUserById(id);
+        if (!currentUser.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         userService.updateUser(user, id);
-
-        List<User> users = userService.getAllUser();
-        return new ResponseEntity<>(users,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/api/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> deleteUser(@PathVariable("id") Integer id){
         Optional<User> user = userService.findUserById(id);
+        if (!user.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         userService.deleteUser(id);
         List<User> users = userService.getAllUser();
         return new ResponseEntity<>(users, HttpStatus.OK);

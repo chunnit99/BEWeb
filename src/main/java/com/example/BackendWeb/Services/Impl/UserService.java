@@ -15,8 +15,7 @@ public class UserService implements IUserService {
 
     @Override
     public List<User> getAllUser() {
-        List<User> users = userRepository.findAll();
-        return users;
+        return userRepository.findAll();
     }
 
     @Override
@@ -25,13 +24,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-
-    public void updateUser(User user) {
-        Optional<User> oldUser = userRepository.findById(user.getId());
-
-  
-
-  
+    public void updateUser(User user,int id) {
+        Optional<User> oldUser = userRepository.findById(id);
         if (oldUser.isPresent()) {
             //Khong cho thay doi username va email, vi la thuoc tinh doc nhat de phan biet voi nguoi dung khac.
             //Neu thich co the cho thay doi, tuy nhien phai viet them code check de khong trung voi nguoi khac
@@ -45,7 +39,6 @@ public class UserService implements IUserService {
         }
 
     }
-  
 
     @Override
     public void deleteUser(Integer id) {

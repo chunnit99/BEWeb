@@ -28,13 +28,16 @@ public class HelperService  implements IHelperService {
     @Override
     public void updateHelper(Helper helper, int id) {
         Optional<Helper> oldHelper = helperRepository.findById(id);
-        oldHelper.get().setFirstName(helper.getFirstName());
-        oldHelper.get().setLastName(helper.getLastName());
-        oldHelper.get().setEmail(helper.getEmail());
-        oldHelper.get().setSex(helper.getSex());
-        oldHelper.get().setAddress(helper.getAddress());
-        oldHelper.get().setBirthday(helper.getBirthday());
-        oldHelper.get().setPhoneNumber(helper.getPhoneNumber());
+        if (oldHelper.isPresent()){
+            oldHelper.get().setFirstName(helper.getFirstName());
+            oldHelper.get().setLastName(helper.getLastName());
+            oldHelper.get().setEmail(helper.getEmail());
+            oldHelper.get().setSex(helper.getSex());
+            oldHelper.get().setAddress(helper.getAddress());
+            oldHelper.get().setBirthday(helper.getBirthday());
+            oldHelper.get().setPhoneNumber(helper.getPhoneNumber());
+        }
+
 
         helperRepository.save(oldHelper.get());
     }
