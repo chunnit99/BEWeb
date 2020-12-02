@@ -17,7 +17,6 @@ public class UserService implements IUserService {
     public List<User> getAllUser() {
         List<User> users = userRepository.findAll();
         return users;
-
     }
 
     @Override
@@ -26,30 +25,37 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUser(User user, int id) {
-        Optional<User> oldUser = userRepository.findById(id);
-        oldUser.get().setFirstName(user.getFirstName());
-        oldUser.get().setLastName(user.getLastName());
-        oldUser.get().setSex(user.getSex());
 
-        oldUser.get().setAddress(user.getAddress());
-        oldUser.get().setBirthday(user.getBirthday());
-        oldUser.get().setEmail(user.getEmail());
-        oldUser.get().setPhoneNumber(user.getPhoneNumber());
+    public void updateUser(User user) {
+        Optional<User> oldUser = userRepository.findById(user.getId());
 
-        userRepository.save(oldUser.get());
+  
+
+  
+        if (oldUser.isPresent()) {
+            //Khong cho thay doi username va email, vi la thuoc tinh doc nhat de phan biet voi nguoi dung khac.
+            //Neu thich co the cho thay doi, tuy nhien phai viet them code check de khong trung voi nguoi khac
+            //Tam thoi chi cho thay doi thong tin ca nhan + mat khau
+            oldUser.get().setAge(user.getAge());
+            oldUser.get().setGender(user.getGender());
+            oldUser.get().setPhoneNumber(user.getPhoneNumber());
+            oldUser.get().setPassword(user.getPassword());
+            oldUser.get().setRealname(user.getRealname());
+            userRepository.save(oldUser.get());
+        }
+
     }
-
+  
 
     @Override
-    public void deleteUser(int id) {
+    public void deleteUser(Integer id) {
         Optional<User> user = userRepository.findById(id);
         userRepository.delete(user.get());
     }
-
     @Override
-    public Optional<User> findUserById(int id) {
+    public Optional<User> findUserById(Integer id) {
         Optional<User> user  = userRepository.findById(id);
         return user;
     }
+
 }

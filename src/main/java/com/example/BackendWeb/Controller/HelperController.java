@@ -8,6 +8,7 @@ import com.example.BackendWeb.Services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,16 +17,19 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "")
 public class HelperController {
+
     @Autowired
     private IHelperService helperService;
 
-    @GetMapping(value = "/helpers")
+    @GetMapping(value = "/api/helpers")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Helper>> getAllHelper(){
         List<Helper> helpers = helperService.getAllHelper();
         return new ResponseEntity<>(helpers, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/helpers/{id}")
+    @GetMapping(value = "/api/helpers/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Helper> getHelperById( @PathVariable("id") Integer id){
         Optional<Helper> helper = helperService.findHelperById(id);
         if (!helper.isPresent()){
@@ -34,13 +38,15 @@ public class HelperController {
         return new ResponseEntity<>(helper.get(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/add-helper")
+    @PostMapping(value = "/api/helpers")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Helper> createHelper(@RequestBody Helper helper){
         helperService.createHelper(helper);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping (value = "/update-helper/{id}")
+    @PutMapping (value = "/api/helpers/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Helper>> updateHelper(@PathVariable("id") Integer id,
                                                  @RequestBody Helper helper){
         Optional<Helper> currentHelper = helperService.findHelperById(helper.getId());
@@ -50,7 +56,8 @@ public class HelperController {
         return new ResponseEntity<>(helpers,HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/delete-helper/{id}")
+    @DeleteMapping(value = "/api/helpers/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Helper>> deleteUser(@PathVariable("id") Integer id){
         Optional<Helper> helper = helperService.findHelperById(id);
         helperService.deleteHelper(id);
