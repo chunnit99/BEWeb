@@ -44,7 +44,7 @@ public class HelperController {
     public ResponseEntity<List<Helper>> updateHelper(@PathVariable("id") Integer id,
                                                  @RequestBody Helper helper){
         Optional<Helper> currentHelper = helperService.findHelperById(helper.getId());
-        helperService.updateHelper(helper);
+        helperService.updateHelper(helper,id);
 
         List<Helper> helpers = helperService.getAllHelper();
         return new ResponseEntity<>(helpers,HttpStatus.OK);

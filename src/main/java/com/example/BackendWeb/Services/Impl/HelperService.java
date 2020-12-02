@@ -26,8 +26,8 @@ public class HelperService  implements IHelperService {
     }
 
     @Override
-    public void updateHelper(Helper helper) {
-        Optional<Helper> oldHelper = helperRepository.findById(helper.getId());
+    public void updateHelper(Helper helper, int id) {
+        Optional<Helper> oldHelper = helperRepository.findById(id);
         oldHelper.get().setFirstName(helper.getFirstName());
         oldHelper.get().setLastName(helper.getLastName());
         oldHelper.get().setEmail(helper.getEmail());

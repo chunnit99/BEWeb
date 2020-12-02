@@ -26,8 +26,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUser(User user) {
-        Optional<User> oldUser = userRepository.findById(user.getId());
+    public void updateUser(User user, int id) {
+        Optional<User> oldUser = userRepository.findById(id);
         oldUser.get().setFirstName(user.getFirstName());
         oldUser.get().setLastName(user.getLastName());
         oldUser.get().setSex(user.getSex());
@@ -37,7 +37,7 @@ public class UserService implements IUserService {
         oldUser.get().setEmail(user.getEmail());
         oldUser.get().setPhoneNumber(user.getPhoneNumber());
 
-        userRepository.save(user);
+        userRepository.save(oldUser.get());
     }
 
 
