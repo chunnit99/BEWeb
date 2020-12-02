@@ -45,8 +45,8 @@ public class UserController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<User>> updateUser(@PathVariable("id") Integer id,
                                                  @RequestBody User user){
-        Optional<User> currentUser = userService.findUserById(user.getId());
-        userService.updateUser(user);
+        Optional<User> currentUser = userService.findUserById(id);
+        userService.updateUser(user, id);
 
         List<User> users = userService.getAllUser();
         return new ResponseEntity<>(users,HttpStatus.OK);

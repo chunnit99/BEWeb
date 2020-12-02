@@ -11,7 +11,7 @@ public interface IHelperService {
 
     void createHelper(Helper helper);
 
-    void updateHelper(Helper helper);
+    void updateHelper(Helper helper, int id);
 
     void deleteHelper(int id);
 
