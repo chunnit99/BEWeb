@@ -1,7 +1,7 @@
-package com.example.BackendWeb.Services.Impl;
+package com.example.BackendWeb.Service.Impl;
 
 import com.example.BackendWeb.Model.User;
-import com.example.BackendWeb.Services.IUserService;
+import com.example.BackendWeb.Service.IUserService;
 
 import java.util.List;
 import java.util.Optional;

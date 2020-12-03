@@ -1,7 +1,7 @@
 package com.example.BackendWeb.Config;
 
 import com.example.BackendWeb.Common.JwtUtils;
-import com.example.BackendWeb.Services.Impl.UserDetailsServiceImpl;
+import com.example.BackendWeb.Service.Impl.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

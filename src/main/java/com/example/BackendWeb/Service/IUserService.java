@@ -1,4 +1,4 @@
-package com.example.BackendWeb.Services;
+package com.example.BackendWeb.Service;
 
 import com.example.BackendWeb.Model.User;
 

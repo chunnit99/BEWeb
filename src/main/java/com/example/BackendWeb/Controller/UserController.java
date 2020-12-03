@@ -1,7 +1,7 @@
 package com.example.BackendWeb.Controller;
 
 import com.example.BackendWeb.Model.User;
-import com.example.BackendWeb.Services.IUserService;
+import com.example.BackendWeb.Service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

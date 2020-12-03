@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "services")
-public class Service {
+public class Services {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  int id;
@@ -20,7 +20,7 @@ public class Service {
     @ManyToMany(mappedBy = "services", fetch = FetchType.LAZY)
     private List<Bill> bills = new ArrayList<>();
 
-    public Service() {
+    public Services() {
     }
 
     public int getId() {
@@ -47,18 +47,12 @@ public class Service {
         this.fee = fee;
     }
 
-    public List<Bill> getBills() {
-        return bills;
-    }
 
-    public void setBills(List<Bill> bills) {
-        this.bills = bills;
-    }
 
-    public Service(int id, String name, double fee, List<Bill> bills) {
+    public Services(int id, String name, double fee) {
         this.id = id;
         this.name = name;
         this.fee = fee;
-        this.bills = bills;
+       this.bills = bills;
     }
 }

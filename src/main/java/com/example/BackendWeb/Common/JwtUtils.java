@@ -1,6 +1,6 @@
 package com.example.BackendWeb.Common;
 
-import com.example.BackendWeb.Services.Impl.UserDetailsImpl;
+import com.example.BackendWeb.Service.Impl.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

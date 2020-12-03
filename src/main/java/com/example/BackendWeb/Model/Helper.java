@@ -2,47 +2,60 @@ package com.example.BackendWeb.Model;
 
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "helpers")
 public class Helper {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int id;
+    private int id;
 
-    @Column(name = "first_name")
-    private  String firstName;
+    private String realname;
 
-    @Column(name = "last_name")
-    private  String lastName;
+    private String age;
 
-    @Column(name = "birthday")
-    private Date birthday;
+    private String gender;
 
-    @Column(name = "address")
     private String address;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "sex")
-    private int sex;
+    private Boolean isLocked = false; // co bi khoa trang thai khong, mac dinh la khong
 
+    private Boolean status_sang = true; // true la san sang, false la khong
 
-    public int getSex() {
-        return sex;
-    }
+    private Boolean status_chieu = true; // true la san sang, false la khong
 
-    public void setSex(int sex) {
-        this.sex = sex;
-    }
+    private Boolean status_toi = true; // true la san sang, false la khong
 
     public Helper() {
+    }
+
+    // constructor day du
+    public Helper(String realname, String age, String gender, String address, String email, String phoneNumber, Boolean isLocked, Boolean status_sang, Boolean status_chieu, Boolean status_toi) {
+        this.realname = realname;
+        this.age = age;
+        this.gender = gender;
+        this.address = address;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.isLocked = isLocked;
+        this.status_sang = status_sang;
+        this.status_chieu = status_chieu;
+        this.status_toi = status_toi;
+    }
+
+    //constructor khong phai quan tam den cac trang thai cua helper
+    public Helper(String realname, String age, String gender, String address, String email, String phoneNumber) {
+        this.realname = realname;
+        this.age = age;
+        this.gender = gender;
+        this.address = address;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
     public int getId() {
@@ -53,28 +66,28 @@ public class Helper {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getRealname() {
+        return realname;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setRealname(String realname) {
+        this.realname = realname;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getAge() {
+        return age;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setAge(String age) {
+        this.age = age;
     }
 
-    public Date getBirthday() {
-        return birthday;
+    public String getGender() {
+        return gender;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getAddress() {
@@ -101,15 +114,36 @@ public class Helper {
         this.phoneNumber = phoneNumber;
     }
 
-
-    public Helper(int id, String firstName, String lastName, Date birthday, String address, String email, String phoneNumber, List<Bill> bills) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthday = birthday;
-        this.address = address;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-
+    public Boolean getLocked() {
+        return isLocked;
     }
+
+    public void setLocked(Boolean locked) {
+        isLocked = locked;
+    }
+
+    public Boolean getStatus_sang() {
+        return status_sang;
+    }
+
+    public void setStatus_sang(Boolean status_sang) {
+        this.status_sang = status_sang;
+    }
+
+    public Boolean getStatus_chieu() {
+        return status_chieu;
+    }
+
+    public void setStatus_chieu(Boolean status_chieu) {
+        this.status_chieu = status_chieu;
+    }
+
+    public Boolean getStatus_toi() {
+        return status_toi;
+    }
+
+    public void setStatus_toi(Boolean status_toi) {
+        this.status_toi = status_toi;
+    }
+
 }

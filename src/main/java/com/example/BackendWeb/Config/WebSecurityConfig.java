@@ -1,7 +1,7 @@
 package com.example.BackendWeb.Config;
 
 
-import com.example.BackendWeb.Services.Impl.UserDetailsServiceImpl;
+import com.example.BackendWeb.Service.Impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

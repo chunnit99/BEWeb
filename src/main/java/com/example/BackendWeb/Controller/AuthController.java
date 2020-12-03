@@ -6,7 +6,7 @@ import com.example.BackendWeb.Dao.IRoleRepository;
 import com.example.BackendWeb.Dao.IUserRepository;
 import com.example.BackendWeb.Model.Role;
 import com.example.BackendWeb.Model.User;
-import com.example.BackendWeb.Services.Impl.UserDetailsImpl;
+import com.example.BackendWeb.Service.Impl.UserDetailsImpl;
 import com.example.BackendWeb.dto.JwtResponse;
 import com.example.BackendWeb.dto.LoginRequest;
 import com.example.BackendWeb.dto.MessageResponse;

@@ -1,4 +1,4 @@
-package com.example.BackendWeb.Services.Impl;
+package com.example.BackendWeb.Service.Impl;
 
 import com.example.BackendWeb.Dao.IUserRepository;
 import com.example.BackendWeb.Model.User;
