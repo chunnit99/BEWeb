@@ -1,6 +1,8 @@
 package com.example.BackendWeb.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -13,6 +15,7 @@ import java.util.Set;
         @UniqueConstraint(columnNames = "username"),
         @UniqueConstraint(columnNames = "email")
 })
+//@JsonIgnoreProperties(value={"hibernateLazyInitializer", "handler", "fieldHandler")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

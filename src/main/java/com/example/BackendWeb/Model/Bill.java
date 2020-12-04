@@ -35,9 +35,11 @@ public class Bill {
 
     private Timestamp created_time;
 
-    private Timestamp finished_time;
+    private Timestamp finished_time; // khởi tạo khi trạng thái của đơn chuyển sang -1 hoặc 2
 
     private String comment; // danh gia cua user sau khi su dung xong dich vu
+
+    private double price;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "bills_service",
@@ -53,7 +55,7 @@ public class Bill {
 
     }
 
-    public Bill(User user, Helper helper, String client_name, String time, String address, String phoneNumber, String note, Integer status, Timestamp created_time, Timestamp finished_time, String comment) {
+    public Bill(User user, Helper helper, String client_name, String time, String address, String phoneNumber, String note, Integer status, Timestamp created_time, Timestamp finished_time, String comment, double price, List<Services> services) {
         this.user = user;
         this.helper = helper;
         this.client_name = client_name;
@@ -65,22 +67,16 @@ public class Bill {
         this.created_time = created_time;
         this.finished_time = finished_time;
         this.comment = comment;
+        this.price = price;
+        this.services = services;
     }
 
-    public Bill(int id, User user, Helper helper, String client_name, String time, String address, String phoneNumber, String note, Integer status, Timestamp created_time, Timestamp finished_time, String comment, List<Services> services) {
-        this.id = id;
-        this.user = user;
-        this.helper = helper;
-        this.client_name = client_name;
-        this.time = time;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.note = note;
-        this.status = status;
-        this.created_time = created_time;
-        this.finished_time = finished_time;
-        this.comment = comment;
-        this.services = services;
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public List<Services> getServices() {
