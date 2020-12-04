@@ -7,27 +7,31 @@ import java.util.List;
 @Entity
 @Table(name = "services")
 public class Services {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int id;
+    private Integer id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "fee")
     private double fee;
-
-    @ManyToMany(mappedBy = "services", fetch = FetchType.LAZY)
-    private List<Bill> bills = new ArrayList<>();
+//
+//    @ManyToMany(mappedBy = "services", fetch = FetchType.LAZY)
+//    private List<Bill> bills = new ArrayList<>();
 
     public Services() {
     }
 
-    public int getId() {
+    public Services(String name, double fee) {
+        this.name = name;
+        this.fee = fee;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -45,14 +49,5 @@ public class Services {
 
     public void setFee(double fee) {
         this.fee = fee;
-    }
-
-
-
-    public Services(int id, String name, double fee) {
-        this.id = id;
-        this.name = name;
-        this.fee = fee;
-       this.bills = bills;
     }
 }

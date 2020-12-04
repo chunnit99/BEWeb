@@ -15,7 +15,7 @@ public class Helper {
 
     private String age;
 
-    private String gender;
+    private Boolean gender;
 
     private String address;
 
@@ -23,39 +23,33 @@ public class Helper {
 
     private String phoneNumber;
 
-    private Boolean isLocked = false; // co bi khoa trang thai khong, mac dinh la khong
+    @Column(name = "isActive")
+    private Boolean isActive = true; // co dang lam viec khong, neu co thi true. dang bị kỷ luật thì false;
 
+    @Column(name = "status_sang")
     private Boolean status_sang = true; // true la san sang, false la khong
 
+    @Column(name = "status_chieu")
     private Boolean status_chieu = true; // true la san sang, false la khong
 
+    @Column(name = "status_toi")
     private Boolean status_toi = true; // true la san sang, false la khong
 
     public Helper() {
     }
 
     // constructor day du
-    public Helper(String realname, String age, String gender, String address, String email, String phoneNumber, Boolean isLocked, Boolean status_sang, Boolean status_chieu, Boolean status_toi) {
+    public Helper(String realname, String age, Boolean gender, String address, String email, String phoneNumber, Boolean isActive, Boolean status_sang, Boolean status_chieu, Boolean status_toi) {
         this.realname = realname;
         this.age = age;
         this.gender = gender;
         this.address = address;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.isLocked = isLocked;
+        this.isActive = isActive;
         this.status_sang = status_sang;
         this.status_chieu = status_chieu;
         this.status_toi = status_toi;
-    }
-
-    //constructor khong phai quan tam den cac trang thai cua helper
-    public Helper(String realname, String age, String gender, String address, String email, String phoneNumber) {
-        this.realname = realname;
-        this.age = age;
-        this.gender = gender;
-        this.address = address;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
     }
 
     public int getId() {
@@ -82,11 +76,11 @@ public class Helper {
         this.age = age;
     }
 
-    public String getGender() {
+    public Boolean getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Boolean gender) {
         this.gender = gender;
     }
 
@@ -114,12 +108,12 @@ public class Helper {
         this.phoneNumber = phoneNumber;
     }
 
-    public Boolean getLocked() {
-        return isLocked;
+    public Boolean getActive() {
+        return isActive;
     }
 
-    public void setLocked(Boolean locked) {
-        isLocked = locked;
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public Boolean getStatus_sang() {

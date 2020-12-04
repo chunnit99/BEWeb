@@ -59,7 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //Do Spring Security đang dùng Session nên khi đã đăng nhập, không sử dụng token mà mình vẫn có thể truy cập được link được bảo vệ.
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**", "/api/test/all").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
+//                .antMatchers("/api/auth/**", "/api/test/all").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated(); // Tất cả các request khác đều cần phải xác thực mới được truy cập
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
