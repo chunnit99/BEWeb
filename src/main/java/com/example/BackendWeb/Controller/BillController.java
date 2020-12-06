@@ -6,6 +6,7 @@ import com.example.BackendWeb.Dao.IUserRepository;
 import com.example.BackendWeb.Dao.ServiceRepository;
 import com.example.BackendWeb.Model.Bill;
 import com.example.BackendWeb.Model.Helper;
+import com.example.BackendWeb.Model.Services;
 import com.example.BackendWeb.dto.BillInputForm;
 import com.example.BackendWeb.dto.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,7 +109,13 @@ public class BillController {
                     return ResponseEntity.badRequest().body(new MessageResponse("Chọn thời gian thuê không chính xác!"));
             }
             // Tính price từ list service và bill.setPrice(), ông lấy listservice như dòng 93 ấy
-
+            // Duyệt từng service lấy price cộng dồn với giá từng dịch vụ
+            List<Services> servicesList = serviceRepository.findAllById(billInput.getServicesIdList());
+            int price = 0 ;
+            for (Services services : servicesList) {
+                price+= services.getFee();
+            }
+            bill.setPrice(price);
             return new ResponseEntity<>(billRepository.save(bill), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -171,6 +179,75 @@ public class BillController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping(value = "/api/bills/history")
+    //    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    // Xem lịch sử đơn
+    public ResponseEntity<List<Bill>> getHistoryOfBill(@RequestParam("action") String action){
+        List<Bill> bills = new ArrayList<>();
+        switch (action){
+            case "complete":
+                 bills = billRepository.findBillsByStatus(2);
+            case "cancel":
+                 bills = billRepository.findBillsByStatus(-1);
+            case "confirmed":
+                bills = billRepository.findBillsByStatus(1);
+            case "unconfimred":
+                bills = billRepository.findBillsByStatus(0);
+        }
+        return new ResponseEntity<>(bills,HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/api/bills/realnameHelper/{realname}")
+    //    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Bill>> findBillByRealnameHelper(@PathVariable("realname") String name){
+        List<Bill> bills = new ArrayList<>();
+        bills= billRepository.findBillsByHelper_Realname(name);
+        if (bills.isEmpty())
+        {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }else {
+            return new ResponseEntity<>(bills, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping(value = "/api/bills/phonenumber/{phonenumber}")
+    //    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Bill>> findBillByPhoneNumberHelper(@PathVariable("phonenumber") String phonenumber){
+        List<Bill> bills = new ArrayList<>();
+        bills= billRepository.findBillsByHelper_PhoneNumber(phonenumber);
+        if (bills.isEmpty())
+        {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }else {
+            return new ResponseEntity<>(bills, HttpStatus.OK);
+        }
+    }
+
+    @PutMapping(value = "/api/bills/{id}/infor")
+    //    @PreAuthorize("hasRole('USER')")
+
+    // Thay doi thong tin don cho xac nhan
+    public ResponseEntity<?> changInforBillUnConfirmed(@PathVariable("id") Integer id, @RequestBody BillInputForm billInput){
+        Optional<Bill> bill = billRepository.findById(id);
+        if (bill.isPresent()){
+            if (bill.get().getStatus() == 0 )
+            {
+                bill.get().setHelper(helperRepository.getOne(billInput.getHelper_id()));
+            bill.get().setClient_name(billInput.getClient_name());
+            bill.get().setTime(billInput.getTime());
+            bill.get().setAddress(billInput.getAddress());
+            bill.get().setPhoneNumber(billInput.getPhoneNumber());
+            bill.get().setNote(billInput.getNote());
+            return  ResponseEntity.ok().body(new MessageResponse("Thay đổi thành công thông tin đơn"));
+            }else {
+                return ResponseEntity.badRequest().body(new MessageResponse("Chỉ có đơn ở trạng thái chờ xác nhận mới có thể thay đổi!"));
+            }
+        }else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
 }

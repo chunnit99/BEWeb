@@ -16,7 +16,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "")
 public class HelperController {
 
-    @Autowired
+
     private HelperRepository helperRepository;
 
     // Admin lay danh sach toan bo helper
@@ -36,11 +36,7 @@ public class HelperController {
 //    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<Helper> getHelperById( @PathVariable("id") Integer id){
         Optional<Helper> helperOptional = helperRepository.findById(id);
-        if (helperOptional.isPresent()) {
-            return new ResponseEntity<>(helperOptional.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+        return helperOptional.map(helper -> new ResponseEntity<>(helper, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     // Tim danh sach nhan vien theo realname
@@ -83,29 +79,33 @@ public class HelperController {
     @GetMapping(value = "/api/helpers/time/{time}")
 //    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<List<Helper>> getHelpersByTime( @PathVariable("time") String time){
-        if (time.equals("sang")) {
-            List<Helper> helpers = helperRepository.findByIsActiveAndReadySang();
-            if (!helpers.isEmpty()) {
-                return new ResponseEntity<>(helpers, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(helpers, HttpStatus.NOT_FOUND);
+        switch (time) {
+            case "sang": {
+                List<Helper> helpers = helperRepository.findByIsActiveAndReadySang();
+                if (!helpers.isEmpty()) {
+                    return new ResponseEntity<>(helpers, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(helpers, HttpStatus.NOT_FOUND);
+                }
             }
-        } else if (time.equals("chieu")) {
-            List<Helper> helpers = helperRepository.findByIsActiveAndReadyChieu();
-            if (!helpers.isEmpty()) {
-                return new ResponseEntity<>(helpers, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(helpers, HttpStatus.NOT_FOUND);
+            case "chieu": {
+                List<Helper> helpers = helperRepository.findByIsActiveAndReadyChieu();
+                if (!helpers.isEmpty()) {
+                    return new ResponseEntity<>(helpers, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(helpers, HttpStatus.NOT_FOUND);
+                }
             }
-        } else if (time.equals("toi")) {
-            List<Helper> helpers = helperRepository.findByIsActiveAndReadyToi();
-            if (!helpers.isEmpty()) {
-                return new ResponseEntity<>(helpers, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(helpers, HttpStatus.NOT_FOUND);
+            case "toi": {
+                List<Helper> helpers = helperRepository.findByIsActiveAndReadyToi();
+                if (!helpers.isEmpty()) {
+                    return new ResponseEntity<>(helpers, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(helpers, HttpStatus.NOT_FOUND);
+                }
             }
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            default:
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
     }
