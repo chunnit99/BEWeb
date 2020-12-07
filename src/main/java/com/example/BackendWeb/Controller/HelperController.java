@@ -1,14 +1,18 @@
 package com.example.BackendWeb.Controller;
 
 
+import com.example.BackendWeb.Dao.BillRepository;
+import com.example.BackendWeb.Model.Bill;
 import com.example.BackendWeb.Model.Helper;
 import com.example.BackendWeb.Dao.HelperRepository;
+import com.example.BackendWeb.dto.HelperDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +22,7 @@ public class HelperController {
 
 
     private HelperRepository helperRepository;
+    private BillRepository billRepository;
 
     // Admin lay danh sach toan bo helper
     @GetMapping(value = "/api/helpers")
@@ -181,4 +186,63 @@ public class HelperController {
         }
     }
 
+
+    //Reset trang thai cua 1 helper ve ranh ca 3 buoi
+    @PutMapping(value = "/api/helpers/{id}/time")
+    //    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> resetTimerHelper(@PathVariable("id") Integer id){
+        try {
+            Optional<Helper> helper = helperRepository.findById(id);
+            if (helper.isPresent()){
+                helper.get().setStatus_chieu(true);
+                helper.get().setStatus_sang(true);
+                helper.get().setStatus_toi(true);
+                helperRepository.save(helper.get());
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //Reset trang thai tat ca helper ve ranh ca 3 buoi
+    @PutMapping(value = "/api/helpers/time")
+    //    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> resetTimerAllHelper(){
+        try {
+            List<Helper> helpers = helperRepository.findAll();
+            for (Helper helper : helpers){
+                helper.setStatus_chieu(true);
+                helper.setStatus_sang(true);
+                helper.setStatus_toi(true);
+                helperRepository.save(helper);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Lay feedback ve 1 helper
+    @GetMapping(value = "/api/helper/{id}/feedback")
+    //    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    private ResponseEntity<HelperDTO> getHelperWithFeedback(@PathVariable("id") Integer id){
+        Optional<Helper> helper = helperRepository.findById(id);
+        if (helper.isPresent()){
+            HelperDTO helperDTO = new HelperDTO();
+            helperDTO.setRealname(helper.get().getRealname());
+            helperDTO.setAge(helper.get().getAge());
+            helperDTO.setGender(helper.get().getGender());
+
+            List<Bill> bills = billRepository.findBillsByHelper(helper.get());
+            List<String> feedbacks = new ArrayList<>();
+            for (Bill bill : bills){
+                feedbacks.add(bill.getComment());
+            }
+            helperDTO.setFeedbacks(feedbacks);
+            return new ResponseEntity<>(helperDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -122,7 +122,7 @@ public class BillController {
         }
     }
 
-    // Admin hoac User xem thong tin nhan vien theo id
+   // admin cap nhat trang thai don
     @PutMapping(value = "/api/bills/{id}")
 //    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> changBillStatusById( @PathVariable("id") Integer id, @RequestParam("action") String action){
@@ -224,10 +224,9 @@ public class BillController {
         }
     }
 
+    // Thay doi thong tin don cho xac nhan
     @PutMapping(value = "/api/bills/{id}/infor")
     //    @PreAuthorize("hasRole('USER')")
-
-    // Thay doi thong tin don cho xac nhan
     public ResponseEntity<?> changInforBillUnConfirmed(@PathVariable("id") Integer id, @RequestBody BillInputForm billInput){
         Optional<Bill> bill = billRepository.findById(id);
         if (bill.isPresent()){
@@ -245,6 +244,26 @@ public class BillController {
             }
         }else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //  User feedback ve dich vu
+    @PutMapping(value = "/api/bills/{id}/feedback")
+    //    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> feedbackBill(@PathVariable("id") Integer id, @RequestBody String feedback){
+        Optional<Bill> bill = billRepository.findById(id);
+        if (bill.isPresent()){
+            if (bill.get().getStatus() != 2)
+            {
+                return  ResponseEntity.badRequest().body(new MessageResponse("Đơn chưa hoàn thành"));
+            }
+            else {
+                bill.get().setComment(feedback);
+                billRepository.save(bill.get());
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
