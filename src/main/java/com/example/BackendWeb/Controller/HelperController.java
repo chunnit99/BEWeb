@@ -21,12 +21,15 @@ import java.util.Optional;
 public class HelperController {
 
 
+    @Autowired
     private HelperRepository helperRepository;
+
+    @Autowired
     private BillRepository billRepository;
 
     // Admin lay danh sach toan bo helper
     @GetMapping(value = "/api/helpers")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Helper>> getAllHelper(){
         List<Helper> helpers = helperRepository.findAll();
         if (!helpers.isEmpty()) {
@@ -38,7 +41,7 @@ public class HelperController {
 
     // Admin hoac User xem thong tin nhan vien theo id
     @GetMapping(value = "/api/helpers/{id}")
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<Helper> getHelperById( @PathVariable("id") Integer id){
         Optional<Helper> helperOptional = helperRepository.findById(id);
         return helperOptional.map(helper -> new ResponseEntity<>(helper, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
@@ -46,7 +49,7 @@ public class HelperController {
 
     // Tim danh sach nhan vien theo realname
     @GetMapping(value = "/api/helpers/realname/{realname}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Helper>> getHelpersByRealname( @PathVariable("realname") String realname){
         List<Helper> helpers = helperRepository.findByRealnameContaining(realname);
         if (!helpers.isEmpty()) {
@@ -58,7 +61,7 @@ public class HelperController {
 
     // Tim danh sach nhan vien theo phonenumber
     @GetMapping(value = "/api/helpers/phonenumber/{phonenumber}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Helper>> getHelpersByPhoneNumber( @PathVariable("phonenumber") String phonenumber){
         List<Helper> helpers = helperRepository.findByPhoneNumberContaining(phonenumber);
         if (!helpers.isEmpty()) {
@@ -70,7 +73,7 @@ public class HelperController {
 
     // Admin tim danh sach nhan vien theo trang thai isActive
     @GetMapping(value = "/api/helpers/isactive/{isactive}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Helper>> getHelpersByIsActive( @PathVariable("isactive") Boolean isActive){
         List<Helper> helpers = helperRepository.findByIsActiveEquals(isActive);
         if (!helpers.isEmpty()) {
@@ -82,7 +85,7 @@ public class HelperController {
 
     // User tim kiem danh sach cac helper sẵn sàng để thuê theo buổi, admin cũng có thể xem được
     @GetMapping(value = "/api/helpers/time/{time}")
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<List<Helper>> getHelpersByTime( @PathVariable("time") String time){
         switch (time) {
             case "sang": {
@@ -118,7 +121,7 @@ public class HelperController {
 
     // Admin tao moi 1 helper (nhan vien)
     @PostMapping(value = "/api/helpers")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Helper> createHelper(@RequestBody Helper helper){
         try {
 //            Helper helper1 = helperRepository.save(helper);
@@ -129,7 +132,7 @@ public class HelperController {
     }
 
     @PutMapping (value = "/api/helpers/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Helper> updateHelper(@PathVariable("id") Integer id,
                                                @RequestBody Helper newHelper){
 
@@ -165,7 +168,7 @@ public class HelperController {
 
     // Admin xoa 1 helper
     @DeleteMapping(value = "/api/helpers/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteHelper(@PathVariable("id") Integer id){
         try {
             helperRepository.deleteById(id);
@@ -189,7 +192,7 @@ public class HelperController {
 
     //Reset trang thai cua 1 helper ve ranh ca 3 buoi
     @PutMapping(value = "/api/helpers/{id}/time")
-    //    @PreAuthorize("hasRole('ADMIN')")
+        @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> resetTimerHelper(@PathVariable("id") Integer id){
         try {
             Optional<Helper> helper = helperRepository.findById(id);
@@ -207,7 +210,7 @@ public class HelperController {
 
     //Reset trang thai tat ca helper ve ranh ca 3 buoi
     @PutMapping(value = "/api/helpers/time")
-    //    @PreAuthorize("hasRole('ADMIN')")
+        @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> resetTimerAllHelper(){
         try {
             List<Helper> helpers = helperRepository.findAll();
@@ -225,7 +228,7 @@ public class HelperController {
 
     // Lay feedback ve 1 helper
     @GetMapping(value = "/api/helper/{id}/feedback")
-    //    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+        @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     private ResponseEntity<HelperDTO> getHelperWithFeedback(@PathVariable("id") Integer id){
         Optional<Helper> helper = helperRepository.findById(id);
         if (helper.isPresent()){
@@ -233,11 +236,12 @@ public class HelperController {
             helperDTO.setRealname(helper.get().getRealname());
             helperDTO.setAge(helper.get().getAge());
             helperDTO.setGender(helper.get().getGender());
-
             List<Bill> bills = billRepository.findBillsByHelper(helper.get());
             List<String> feedbacks = new ArrayList<>();
             for (Bill bill : bills){
-                feedbacks.add(bill.getComment());
+                if (bill.getStatus() ==2){
+                    feedbacks.add(bill.getComment());
+                }
             }
             helperDTO.setFeedbacks(feedbacks);
             return new ResponseEntity<>(helperDTO, HttpStatus.OK);
@@ -245,4 +249,5 @@ public class HelperController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 }

@@ -23,7 +23,7 @@ public class ServiceController {
     ServiceRepository serviceRepository;
 
     @GetMapping("/api/services")
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<List<Services>> getAllServices(){
         List<Services> services = serviceRepository.findAll();
         if (!services.isEmpty()) {
@@ -34,7 +34,7 @@ public class ServiceController {
     }
 
     @GetMapping(value = "/api/services/{id}")
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Services> getServiceById(@PathVariable("id") Integer id){
         Optional<Services> services = serviceRepository.findById(id);
         if (services.isPresent()) {
@@ -45,7 +45,7 @@ public class ServiceController {
     }
 
     @PostMapping(value = "/api/services")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Services> createService(@RequestBody Services services){
         try {
             return new ResponseEntity<>(serviceRepository.save(services), HttpStatus.CREATED);
@@ -55,7 +55,7 @@ public class ServiceController {
     }
 
     @PutMapping (value = "/api/services/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Services> updateService(@PathVariable("id") Integer id,
                                                @RequestBody Services newService){
 //        private String name;
@@ -73,7 +73,7 @@ public class ServiceController {
     }
 
     @DeleteMapping(value = "/api/services/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> deleteAService(@PathVariable("id") Integer id){
         try {
             serviceRepository.deleteById(id);
@@ -84,7 +84,7 @@ public class ServiceController {
     }
 
     @DeleteMapping(value = "/api/services")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> deleteAllServices(){
         try {
             serviceRepository.deleteAll();

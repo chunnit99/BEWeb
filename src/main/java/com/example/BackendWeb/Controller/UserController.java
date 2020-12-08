@@ -22,7 +22,7 @@ public class UserController {
     IUserRepository userRepository;
 
     @GetMapping(value = "/api/users")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserInformationNoPassword>> getAllUser(){
         List<User> users = userRepository.findAll();
         if (!users.isEmpty()) {
@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/api/users/{id}")
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<UserInformationNoPassword> getUserById(@PathVariable("id") Integer id){
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/api/users/realname/{realname}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserInformationNoPassword>> getListUsersByRealname(@PathVariable("realname") String realname){
         List<User> users = userRepository.findByRealnameContaining(realname);
         if (!users.isEmpty()) {
@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/api/users/phonenumber/{phonenumber}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserInformationNoPassword>> getListUsersByPhoneNumber( @PathVariable("phonenumber") String phoneNumber){
         List<User> users = userRepository.findByPhoneNumberContaining(phoneNumber);
         if (!users.isEmpty()) {
@@ -65,25 +65,11 @@ public class UserController {
         }
     }
 
-//    // api tao user nay chi dung de test api, thuc te da co chuc nang dang ky tai khoan;.
-//    @PostMapping(value = "/api/users")
-////    @PreAuthorize("hasRole('ADMIN')")
-//    public ResponseEntity<User> createAUser(@RequestBody User user){
-//        try {
-//            return new ResponseEntity<>(userRepository.save(user), HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-
     @PutMapping (value = "/api/users/{id}")
-//    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<User> updateAUserInformation(@PathVariable("id") Integer id,
                                                       @RequestBody UserInformationForUpdate userInformationForUpdate){
-//        private String realname;
-//        private Boolean gender;
-//        private int age;
-//        private String phoneNumber;
+
 
         Optional<User> oldUserOptional = userRepository.findById(id);
         if (oldUserOptional.isPresent()) {
@@ -99,7 +85,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/api/users/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> deleteAUser(@PathVariable("id") Integer id){
         try {
             userRepository.deleteById(id);
@@ -109,26 +95,9 @@ public class UserController {
         }
     }
 
-//    @DeleteMapping(value = "/api/users")
-////    @PreAuthorize("hasRole('ADMIN')")
-//    public ResponseEntity<HttpStatus> deleteAllUsers(){
-//        try {
-//            userRepository.deleteAll();
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
     public UserInformationNoPassword returnUserWithNoPassword(User user) {
         UserInformationNoPassword userInformationNoPassword = new UserInformationNoPassword();
-//        private Integer id;
-//        private String username;
-//        private String email;
-//        private String realname;
-//        private Boolean gender;
-//        private int age;
-//        private String phoneNumber;
         userInformationNoPassword.setId(user.getId());
         userInformationNoPassword.setUsername(user.getUsername());
         userInformationNoPassword.setEmail(user.getEmail());

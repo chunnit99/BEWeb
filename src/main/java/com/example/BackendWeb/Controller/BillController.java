@@ -38,7 +38,7 @@ public class BillController {
 
     // Admin xem toan bo don hang
     @GetMapping(value = "/api/bills")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Bill>> getAllBills(){
         List<Bill> bills = billRepository.findAll();
         if (!bills.isEmpty()) {
@@ -50,7 +50,7 @@ public class BillController {
 
     // Admin hoac User xem thong tin bill theo id
     @GetMapping(value = "/api/bills/{id}")
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<Bill> getBillById( @PathVariable("id") Integer id){
         Optional<Bill> billOptional = billRepository.findById(id);
         if (billOptional.isPresent()) {
@@ -77,7 +77,7 @@ public class BillController {
     // 4 field --- là Bill có nhưng BillInputForm không có, mình cần phải tự xử lý
 
     @PostMapping(value = "/api/bills")
-//    @PreAuthorize("hasRole('USER')") // chi co User tao duoc don
+    @PreAuthorize("hasRole('USER')") // chi co User tao duoc don
     public ResponseEntity<?> createBill(@RequestBody BillInputForm billInput){
         try {
             Bill bill = new Bill();
@@ -124,7 +124,7 @@ public class BillController {
 
    // admin cap nhat trang thai don
     @PutMapping(value = "/api/bills/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> changBillStatusById( @PathVariable("id") Integer id, @RequestParam("action") String action){
         Optional<Bill> billOptional = billRepository.findById(id);
         if (billOptional.isPresent()) {
@@ -170,6 +170,7 @@ public class BillController {
                         bill.setStatus(2);
                         // Set thời gian hoàn thành đơn
                         bill.setFinished_time(new Timestamp(System.currentTimeMillis()));
+                        billRepository.save(bill);
                         return ResponseEntity.ok().body(new MessageResponse("Hoàn thành đơn thành công"));
                     } else return ResponseEntity.badRequest().body(new MessageResponse("Chỉ có đơn ở trạng thái đã xác nhận mới có thể được hoàn thành!"));
             }
@@ -181,17 +182,20 @@ public class BillController {
     }
 
     @GetMapping(value = "/api/bills/history")
-    //    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+        @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     // Xem lịch sử đơn
     public ResponseEntity<List<Bill>> getHistoryOfBill(@RequestParam("action") String action){
         List<Bill> bills = new ArrayList<>();
         switch (action){
             case "complete":
                  bills = billRepository.findBillsByStatus(2);
+                 break;
             case "cancel":
                  bills = billRepository.findBillsByStatus(-1);
+                break;
             case "confirmed":
                 bills = billRepository.findBillsByStatus(1);
+                break;
             case "unconfimred":
                 bills = billRepository.findBillsByStatus(0);
         }
@@ -199,7 +203,7 @@ public class BillController {
     }
 
     @GetMapping(value = "/api/bills/realnameHelper/{realname}")
-    //    @PreAuthorize("hasRole('ADMIN')")
+        @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Bill>> findBillByRealnameHelper(@PathVariable("realname") String name){
         List<Bill> bills = new ArrayList<>();
         bills= billRepository.findBillsByHelper_Realname(name);
@@ -212,7 +216,7 @@ public class BillController {
     }
 
     @GetMapping(value = "/api/bills/phonenumber/{phonenumber}")
-    //    @PreAuthorize("hasRole('ADMIN')")
+        @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Bill>> findBillByPhoneNumberHelper(@PathVariable("phonenumber") String phonenumber){
         List<Bill> bills = new ArrayList<>();
         bills= billRepository.findBillsByHelper_PhoneNumber(phonenumber);
@@ -226,7 +230,7 @@ public class BillController {
 
     // Thay doi thong tin don cho xac nhan
     @PutMapping(value = "/api/bills/{id}/infor")
-    //    @PreAuthorize("hasRole('USER')")
+        @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> changInforBillUnConfirmed(@PathVariable("id") Integer id, @RequestBody BillInputForm billInput){
         Optional<Bill> bill = billRepository.findById(id);
         if (bill.isPresent()){
@@ -238,6 +242,13 @@ public class BillController {
             bill.get().setAddress(billInput.getAddress());
             bill.get().setPhoneNumber(billInput.getPhoneNumber());
             bill.get().setNote(billInput.getNote());
+                List<Services> servicesList = serviceRepository.findAllById(billInput.getServicesIdList());
+                int price = 0 ;
+                for (Services services : servicesList) {
+                    price+= services.getFee();
+                }
+                bill.get().setPrice(price);
+                billRepository.save(bill.get());
             return  ResponseEntity.ok().body(new MessageResponse("Thay đổi thành công thông tin đơn"));
             }else {
                 return ResponseEntity.badRequest().body(new MessageResponse("Chỉ có đơn ở trạng thái chờ xác nhận mới có thể thay đổi!"));
@@ -249,7 +260,7 @@ public class BillController {
 
     //  User feedback ve dich vu
     @PutMapping(value = "/api/bills/{id}/feedback")
-    //    @PreAuthorize("hasRole('USER')")
+        @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> feedbackBill(@PathVariable("id") Integer id, @RequestBody String feedback){
         Optional<Bill> bill = billRepository.findById(id);
         if (bill.isPresent()){
